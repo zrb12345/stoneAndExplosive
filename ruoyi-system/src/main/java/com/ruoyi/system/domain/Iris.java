@@ -1,10 +1,14 @@
 package com.ruoyi.system.domain;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-
-public class Iris {
-    //@ExcelProperty 是easyexcel给我们提供的一个方法。
-//@ExcelProperty 相当于我们表格里面的字段名，如果这里不写这里就是我们的属性名"id"
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
+@Data
+public class Iris extends BaseEntity {
+    /** 参数主键 */
+    @Excel(name = "参数主键", cellType = Excel.ColumnType.NUMERIC)
+    private Integer id;
     @ExcelProperty("SL")
     private String sepalLength;
     @ExcelProperty("SW")
@@ -14,18 +18,20 @@ public class Iris {
     @ExcelProperty("PW")
     private String petalWidth;
     @ExcelProperty("Spe")
-    private String species;
-//    Sepal.Length	Sepal.Width	Petal.Length	Petal.Width
-
+    private String type;
+    private String createBy;
+    private String status;
+    /** 删除标志（0代表存在 2代表删除） */
+    private String delFlag;
     public Iris(){
 
     }
-    public Iris(String pl, String pw, String sl, String sw,String species) {
+    public Iris(String pl, String pw, String sl, String sw,String type) {
         this.petalLength = pl;
         this.petalWidth = pw;
         this.sepalLength = sl;
         this.sepalWidth = sw;
-        this.species = species;
+        this.type = type;
     }
 
     @Override
@@ -35,47 +41,10 @@ public class Iris {
                 ", 花瓣宽度='" + petalWidth + '\'' +
                 ", 花萼长度='" + sepalLength + '\'' +
                 ", 花萼宽度=" + sepalWidth + '\'' +
-                ", 类型是=" + species +
+                ", 类型是=" + type +
                 '}';
     }
 
-    public String getPetalLength() {
-        return petalLength;
-    }
-
-    public void setPetalLength(String pl) {
-        this.petalLength= pl;
-    }
-
-    public String getPetalWidth() {
-        return petalWidth;
-    }
-
-    public void setPetalWidth(String pw) {
-        this.petalWidth = pw;
-    }
-
-    public String getSepalLength() {
-        return sepalLength;
-    }
-
-    public void setSepalLength(String sl) {
-        this.sepalLength = sl;
-    }
-
-    public String getSepalWidth() {
-        return sepalWidth;
-    }
-
-    public void setSepalWidth(String sw) {
-        this.sepalWidth = sw;
-    }
-    public String getSpecies(){
-        return species;
-    }
-    public void setSpecies(String species){
-        this.species=species;
-    }
 }
 
 
