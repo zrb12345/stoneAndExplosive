@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.se.system.mapper.IrisMapper">
 
-	<resultMap type="Iris" id="IrisResult">
+	<resultMap  id="res" type="com.se.system.domain.Iris">
 		<id     property="id"     column="id"     />
 		<result property="sepalLength"   column="sepal_length"   />
 		<result property="petalLength"  column="petal_length"   />
@@ -38,7 +38,7 @@
 	<insert id="insertIris">
 		insert into iris
 		(
-<!--		<if test="id != null and id != 0">id,</if>-->
+		<!--		<if test="id != null and id != 0">id,</if>-->
 		<if test="sepalLength != null ">sepal_length,</if>
 		<if test="petalLength != null ">petal_length,</if>
 		<if test="sepalWidth != null ">sepal_width,</if>
@@ -49,7 +49,7 @@
 		create_time
 		)
 		values(
-<!--		<if test="id != null and id != 0">id,</if>-->
+		<!--		<if test="id != null and id != 0">id,</if>-->
 		<if test="sepalLength != null ">#{sepalLength},</if>
 		<if test="petalLength != null ">#{petalLength},</if>
 		<if test="sepalWidth != null ">#{sepalWidth},</if>
@@ -83,7 +83,7 @@
 
 
 
-	<select id="selectIrisList" parameterType="Iris" resultMap="IrisResult">
+	<select id="selectIrisList" parameterType="com.se.system.domain.Iris" resultMap="res">
 		<include refid="selectIris"/>
 		where i.del_flag = '0'
 		<!--		<if test="deptId != null and deptId != 0">-->
@@ -106,4 +106,4 @@
 
 
 
-</mapper> 
+</mapper>

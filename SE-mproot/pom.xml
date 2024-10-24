@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <name>MyBatisPlus模块</name>
-    <artifactId>wyr-mproot</artifactId>
+    <artifactId>SE-mproot</artifactId>
 
     <properties>
         <jjwt.version>0.10.6</jjwt.version>

@@ -2,10 +2,9 @@ package com.se.system.domain;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.se.common.annotation.Excel;
-import com.se.common.core.domain.BaseEntity;
 import lombok.Data;
 @Data
-public class Iris extends BaseEntity {
+public class Iris extends BaseDomain {
     /** 参数主键 */
     @Excel(name = "参数主键", cellType = Excel.ColumnType.NUMERIC)
     private Integer id;
@@ -21,8 +20,7 @@ public class Iris extends BaseEntity {
     private Integer type;
     private String createBy;
     private String status;
-    /** 删除标志（0代表存在 2代表删除） */
-    private String delFlag;
+
 
     public Iris(){
 

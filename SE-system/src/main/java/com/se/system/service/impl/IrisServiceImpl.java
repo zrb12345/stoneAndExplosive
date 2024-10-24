@@ -2,13 +2,20 @@ package com.se.system.service.impl;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.PageReadListener;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.se.common.core.redis.RedisCache;
 import com.se.common.exception.ServiceException;
+import com.se.common.service.impl.BaseServiceImpl;
+import com.se.common.utils.QueryHelpPlus;
 import com.se.system.domain.Iris;
 import com.se.system.mapper.IrisMapper;
 import com.se.system.service.IrisService;
+import com.se.system.service.dto.IrisQueryCriteria;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Validator;
@@ -23,9 +30,11 @@ import static com.se.common.utils.SecurityUtils.getUsername;
  *
  * @author se
  */
+
+@Slf4j
 @Service
-public class IrisServiceImpl implements IrisService
-{
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
+public class IrisServiceImpl extends BaseServiceImpl<IrisMapper, Iris> implements IrisService {
     @Autowired
     private IrisMapper irisMapper;
 
@@ -38,14 +47,13 @@ public class IrisServiceImpl implements IrisService
     /**
      * 查询参数配置列表
      *
-     * @param iris 参数配置信息
+     * @param criteria 参数配置信息
      * @return 参数配置集合
      */
     @Override
-    public List<Iris> selectIrisList(Iris iris)
-    {
-
-        return irisMapper.selectIrisList(iris);
+    public List<Iris> selectIrisList(IrisQueryCriteria criteria){
+        QueryWrapper queryWrapper =  QueryHelpPlus.getPredicate(Iris.class, criteria);
+        return irisMapper.selectList(queryWrapper);
     }
 //
 //    /**

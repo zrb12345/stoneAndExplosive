@@ -7,6 +7,7 @@ import com.se.common.core.page.TableDataInfo;
 import com.se.common.enums.BusinessType;
 import com.se.system.domain.Iris;
 import com.se.system.service.IrisService;
+import com.se.system.service.dto.IrisQueryCriteria;
 import com.se.system.service.impl.GlobalObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,10 +36,11 @@ public class IrisController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:dept:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Iris iris)
+    public TableDataInfo list(IrisQueryCriteria iris)
     {
         startPage();
         List<Iris> list = irisService.selectIrisList(iris);
+
         return getDataTable(list);
 //        return success(depts);
     }
@@ -119,15 +121,6 @@ public class IrisController extends BaseController
     @DeleteMapping("/{deptId}")
     public AjaxResult remove(@PathVariable Long deptId)
     {
-//        if (irisService.hasChildByIrisId(deptId))
-//        {
-//            return warn("存在下级数据,不允许删除");
-//        }
-//        if (irisService.checkIrisExistUser(deptId))
-//        {
-//            return warn("数据存在用户,不允许删除");
-//        }
-//        irisService.checkIrisDataScope(deptId);
         return toAjax(irisService.deleteIrisById(deptId));
     }
 
@@ -153,9 +146,9 @@ public class IrisController extends BaseController
     public AjaxResult  trainAndForecast( )
     {
         GlobalObject globalObject = GlobalObject.getInstance();
-        Iris query = new Iris();
-        query.setDelFlag("0");
-        List<Iris> datas = irisService.selectIrisList(query);
+        IrisQueryCriteria criteria = new IrisQueryCriteria();
+        criteria.setIsDel(0);
+        List<Iris> datas = irisService.selectIrisList(criteria);
         return globalObject.trainModel(datas);
     }
     //模型训练出来后，根据模型生成判断结果
@@ -171,7 +164,12 @@ public class IrisController extends BaseController
         }
         try {
            int type =  rf.forest(iris);
-            return success(str+type);
+            switch (type){
+                case 1: str+="setosa";break;
+                case 2: str+="versicolor";break;
+                case 3: str+="virginica";break;
+            }
+            return success(str);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

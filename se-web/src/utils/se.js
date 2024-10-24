@@ -67,7 +67,19 @@ export function addDateRange(params, dateRange, propName) {
   }
   return search;
 }
-
+// 添加日期范围 wyr版本的 上面是若依版本的
+export function addDateRangeWYR(params, dateRange, propName) {
+  let search = params;
+  search.params = typeof (search.params) === 'object' && search.params !== null && !Array.isArray(search.params) ? search.params : {};
+  dateRange = Array.isArray(dateRange) ? dateRange : [];
+  if (typeof (propName) === 'undefined') {
+    search.createTime = [];
+    search.createTime[0] = dateRange[0];
+    search.createTime[1] = dateRange[1];
+  } else {
+  }
+  return search;
+}
 // 回显数据字典
 export function selectDictLabel(datas, value) {
   if (value === undefined) {

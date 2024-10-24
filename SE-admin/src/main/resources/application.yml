@@ -96,8 +96,20 @@ token:
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
   expireTime: 30
-
 # MyBatis配置
+mybatis-plus:
+  type-aliases-package: com.se.**.domain # 别名扫描包
+  mapper-locations: "classpath*:/mapper/**/*.xml"
+  check-config-location: true
+  configuration:
+    map-underscore-to-camel-case: true # 是否开启下划线和驼峰的映射
+    cache-enabled: false # 是否开启二级缓存
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      mapper-locations: classpath*:mapper/**/*Mapper.xml
 mybatis:
   # 搜索指定包别名
   typeAliasesPackage: com.se.**.domain

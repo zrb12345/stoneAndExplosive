@@ -56,7 +56,7 @@ public class GlobalObject {
         try {
             //创建实体类,输入数据
             Iris query = new Iris();
-            query.setDelFlag("0");
+            query.setIsDel(0);
 //            List<Iris> datas = irisService.selectIrisList(query);
             for (Iris data : datas) {
                 rf.insert(data);

@@ -1,6 +1,8 @@
 package com.se.system.mapper;
 
+import com.se.common.mapper.CoreMapper;
 import com.se.system.domain.Iris;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -9,7 +11,8 @@ import java.util.List;
  *
  * @author se
  */
-public interface IrisMapper
+@Repository
+public interface IrisMapper extends CoreMapper<Iris>
 {
 
     /**

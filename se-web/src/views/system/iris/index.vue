@@ -41,7 +41,7 @@
             <el-date-picker
               v-model="dateRange"
               style="width: 240px"
-              value-format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
               type="daterange"
               range-separator="-"
               start-placeholder="开始日期"
@@ -121,13 +121,13 @@
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="irisList" @selection-change="handleSelectionChange">
+        <el-table v-loading="loading" :data="irisList" @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="花瓣编号" align="center" key="id" prop="id" v-if="columns[0].visible" />
           <el-table-column label="花瓣长度" align="center" key="petalLength" prop="petalLength" v-if="columns[1].visible" :show-overflow-tooltip="true" />
           <el-table-column label="花萼长度" align="center" key="sepalLength" prop="sepalLength" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="花萼宽度" align="center" key="sepalWidth" prop="sepalWidth" v-if="columns[3].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="花瓣宽度" align="center" key="petalWidth" prop="petalWidth" v-if="columns[4].visible" width="120" />
+          <el-table-column label="花瓣宽度"  align="center" key="petalWidth" prop="petalWidth" v-if="columns[3].visible" width="120" />
+          <el-table-column label="花萼宽度" align="center" key="sepalWidth" prop="sepalWidth" v-if="columns[4].visible" :show-overflow-tooltip="true" />
           <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
             <template slot-scope="scope">
               <el-switch
@@ -138,7 +138,10 @@
               ></el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible" width="160">
+          <el-table-column prop="type" label="类型" sortable="custom" :sort-orders="['descending', 'ascending']" align="center" key="type" v-if="columns[6].visible">
+              <template slot-scope="scope">{{ getLabel(getType,scope.row.type,'dictValue','dictLabel') }}</template>
+          </el-table-column>
+          <el-table-column label="创建时间" align="center" prop="createTime"  width="160">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
@@ -288,13 +291,14 @@ import { listIris,trainAndForecast,onlyForecast,addiris, getIris, delIris, updat
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-
 export default {
   name: "Iris",
   dicts: ['sys_normal_disable', 'sys_iris_sex'],
   components: { Treeselect },
   data() {
     return {
+         // 默认排序
+         defaultSort: {prop: 'operTime', order: 'descending'},
       // 遮罩层
       loading: true,
       // 选中数组
@@ -367,7 +371,13 @@ export default {
       ],
       // 表单校验
       rules: {
-      }
+      },
+       // 模拟数据字典数据，类型数据
+       getType: [		
+          {dictValue: 1,dictLabel:'setosa'},
+          {dictValue: 2,dictLabel:'versicolor'},
+          {dictValue: 3,dictLabel:'virginica'}
+        ],
     };
   },
   watch: {
@@ -384,10 +394,16 @@ export default {
     });
   },
   methods: {
+       /** 排序触发事件 */
+    handleSortChange(column, prop, order) {
+      this.queryParams.orderByColumn = column.prop;
+      this.queryParams.isAsc = column.order;
+      this.getList();
+    },
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      listIris(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+      listIris(this.addDateRangeWYR(this.queryParams, this.dateRange)).then(response => {
           this.irisList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -524,7 +540,6 @@ export default {
     onlyForecastFun(row){
       onlyForecast(row).then(response => {
         window.alert(  response.msg  );
-      this.alert("aaa")  
       }
       );
     },
@@ -555,7 +570,6 @@ export default {
     trainAndForecastFun(){
       trainAndForecast().then(response => {
         window.alert(  response.msg  );
-      this.alert("aaa")  
       }
       );
     },

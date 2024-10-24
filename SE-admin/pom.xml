@@ -105,10 +105,20 @@
             <artifactId>SE-quartz</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.se</groupId>
+            <artifactId>SE-common</artifactId>
+        </dependency>
         <!-- 代码生成-->
         <dependency>
             <groupId>com.se</groupId>
             <artifactId>SE-generator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.se</groupId>
+                    <artifactId>SE-common</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
