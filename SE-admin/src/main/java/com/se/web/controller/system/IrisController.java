@@ -162,15 +162,20 @@ public class IrisController extends BaseController
     @Log(title = "模型使用", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:user:import')")
     @PostMapping("/onlyForecast")
-    public AjaxResult  onlyForecast( ){
-        StringBuilder str = new StringBuilder("错误信息 : ");
+    public AjaxResult  onlyForecast(@RequestBody Iris iris ){
+        String str = "预测结果是 : ";
         GlobalObject globalObject = GlobalObject.getInstance();
         RandomForest rf = globalObject.getRf();
-        Iris iris = new Iris();
-//        iris.setId(1L);
-        Iris iris2 = irisService.selectIrisById(1L);
-//        rf.forest()
-        return success(String.valueOf(str));
+        if(globalObject.getState()!=1){
+            return error("模型还没有训练完成,请先训练模型");
+        }
+        try {
+           int type =  rf.forest(iris);
+            return success(str+type);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 
