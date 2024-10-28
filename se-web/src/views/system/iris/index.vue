@@ -3,50 +3,25 @@
     <el-row :gutter="20">
       <!--用户数据-->
       <el-col :span="24" :xs="24">
-        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
+          label-width="68px">
           <el-form-item label="花瓣长度" prop="petalLength">
-            <el-input
-              v-model="queryParams.petalLength"
-              placeholder="请输入花瓣长度"
-              clearable
-              style="width: 240px"
-              @keyup.enter.native="handleQuery"
-            />
+            <el-input v-model="queryParams.petalLength" placeholder="请输入花瓣长度" clearable style="width: 240px"
+              @keyup.enter.native="handleQuery" />
           </el-form-item>
           <el-form-item label="花瓣宽度" prop="petalWidth">
-            <el-input
-              v-model="queryParams.petalWidth"
-              placeholder="请输入花瓣宽度"
-              clearable
-              style="width: 240px"
-              @keyup.enter.native="handleQuery"
-            />
+            <el-input v-model="queryParams.petalWidth" placeholder="请输入花瓣宽度" clearable style="width: 240px"
+              @keyup.enter.native="handleQuery" />
           </el-form-item>
           <el-form-item label="状态" prop="status">
-            <el-select
-              v-model="queryParams.status"
-              placeholder="花瓣状态"
-              clearable
-              style="width: 240px"
-            >
-              <el-option
-                v-for="dict in dict.type.sys_normal_disable"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
+            <el-select v-model="queryParams.status" placeholder="花瓣状态" clearable style="width: 240px">
+              <el-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.label"
+                :value="dict.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="创建时间">
-            <el-date-picker
-              v-model="dateRange"
-              style="width: 240px"
-                value-format="yyyy-MM-dd HH:mm:ss"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
+            <el-date-picker v-model="dateRange" style="width: 240px" value-format="yyyy-MM-dd HH:mm:ss" type="daterange"
+              range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -56,124 +31,68 @@
 
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
-            <el-button
-              type="primary"
-              plain
-              icon="el-icon-plus"
-              size="mini"
-              @click="handleAdd"
-              v-hasPermi="['system:iris:add']"
-            >新增</el-button>
+            <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
+              v-hasPermi="['system:iris:add']">新增</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button
-              type="success"
-              plain
-              icon="el-icon-edit"
-              size="mini"
-              :disabled="single"
-              @click="handleUpdate"
-              v-hasPermi="['system:iris:edit']"
-            >修改</el-button>
+            <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
+              v-hasPermi="['system:iris:edit']">修改</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button
-              type="danger"
-              plain
-              icon="el-icon-delete"
-              size="mini"
-              :disabled="multiple"
-              @click="handleDelete"
-              v-hasPermi="['system:iris:remove']"
-            >删除</el-button>
+            <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
+              v-hasPermi="['system:iris:remove']">删除</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button
-              type="info"
-              plain
-              icon="el-icon-upload2"
-              size="mini"
-              @click="handleImport"
-              v-hasPermi="['system:iris:import']"
-            >导入</el-button>
+            <el-button type="info" plain icon="el-icon-upload2" size="mini" @click="handleImport"
+              v-hasPermi="['system:iris:import']">导入</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button
-              type="normal"
-              plain
-              icon="el-icon-upload2"
-              size="mini"
-              @click="trainAndForecastFun"
-              v-hasPermi="['system:iris:import']"
-            >训练</el-button>
+            <el-button type="normal" plain icon="el-icon-upload2" size="mini" @click="trainAndForecastFun"
+              v-hasPermi="['system:iris:import']">训练</el-button>
           </el-col>
 
           <el-col :span="1.5">
-            <el-button
-              type="warning"
-              plain
-              icon="el-icon-download"
-              size="mini"
-              @click="handleExport"
-              v-hasPermi="['system:iris:export']"
-            >导出</el-button>
+            <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
+              v-hasPermi="['system:iris:export']">导出</el-button>
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="irisList" @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
+        <el-table v-loading="loading" :data="irisList" @selection-change="handleSelectionChange"
+          :default-sort="defaultSort" @sort-change="handleSortChange">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="花瓣编号" align="center" key="id" prop="id" v-if="columns[0].visible" />
-          <el-table-column label="花瓣长度" align="center" key="petalLength" prop="petalLength" v-if="columns[1].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="花萼长度" align="center" key="sepalLength" prop="sepalLength" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="花瓣宽度"  align="center" key="petalWidth" prop="petalWidth" v-if="columns[3].visible" width="120" />
-          <el-table-column label="花萼宽度" align="center" key="sepalWidth" prop="sepalWidth" v-if="columns[4].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="花瓣长度" align="center" key="petalLength" prop="petalLength" v-if="columns[1].visible"
+            :show-overflow-tooltip="true" />
+          <el-table-column label="花萼长度" align="center" key="sepalLength" prop="sepalLength" v-if="columns[2].visible"
+            :show-overflow-tooltip="true" />
+          <el-table-column label="花瓣宽度" align="center" key="petalWidth" prop="petalWidth" v-if="columns[3].visible"
+            width="120" />
+          <el-table-column label="花萼宽度" align="center" key="sepalWidth" prop="sepalWidth" v-if="columns[4].visible"
+            :show-overflow-tooltip="true" />
           <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
             <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.status"
-                active-value="0"
-                inactive-value="1"
-                @change="handleStatusChange(scope.row)"
-              ></el-switch>
+              <el-switch v-model="scope.row.status" active-value="0" inactive-value="1"
+                @change="handleStatusChange(scope.row)"></el-switch>
             </template>
           </el-table-column>
-          <el-table-column prop="type" label="类型" sortable="custom" :sort-orders="['descending', 'ascending']" align="center" key="type" v-if="columns[6].visible">
-              <template slot-scope="scope">{{ getLabel(getType,scope.row.type,'dictValue','dictLabel') }}</template>
+          <el-table-column prop="type" label="类型" sortable="custom" :sort-orders="['descending', 'ascending']"
+            align="center" key="type" v-if="columns[6].visible">
+            <template slot-scope="scope">{{ getLabel(getType, scope.row.type, 'dictValue', 'dictLabel') }}</template>
           </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime"  width="160">
+          <el-table-column label="创建时间" align="center" prop="createTime" width="160">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            label="操作"
-            align="center"
-            width="160"
-            class-name="small-padding fixed-width"
-          >
+          <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width">
             <template slot-scope="scope" v-if="scope.row.id !== 1">
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:iris:edit']"
-              >修改</el-button>
-              <el-button
-              size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="onlyForecastFun(scope.row)"
-              v-hasPermi="['system:iris:edit']"
-            > 预测</el-button>
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click="handleDelete(scope.row)"
-                v-hasPermi="['system:iris:remove']"
-              >删除</el-button>
+              <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
+                v-hasPermi="['system:iris:edit']">修改</el-button>
+              <el-button size="mini" type="text" icon="el-icon-edit" @click="onlyForecastFun(scope.row)"
+                v-hasPermi="['system:iris:edit']"> 预测</el-button>
+              <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
+                v-hasPermi="['system:iris:remove']">删除</el-button>
               <!-- <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:iris:resetPwd', 'system:iris:edit']">
                 <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
                 <el-dropdown-menu slot="dropdown">
@@ -185,13 +104,8 @@
           </el-table-column>
         </el-table>
 
-        <pagination
-          v-show="total>0"
-          :total="total"
-          :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize"
-          @pagination="getList"
-        />
+        <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize" @pagination="getList" />
       </el-col>
     </el-row>
 
@@ -229,16 +143,14 @@
           <el-col :span="12">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="dict in dict.type.sys_normal_disable"
-                  :key="dict.value"
-                  :label="dict.value"
-                >{{dict.label}}</el-radio>
+                <el-radio v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.value">{{
+                  dict.label
+                  }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
-       
+
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注">
@@ -249,25 +161,16 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
-        
+
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
 
     <!-- 用户导入对话框 -->
     <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
-      <el-upload
-        ref="upload"
-        :limit="1"
-        accept=".xlsx, .xls"
-        :headers="upload.headers"
-        :action="upload.url + '?updateSupport=' + upload.updateSupport"
-        :disabled="upload.isUploading"
-        :on-progress="handleFileUploadProgress"
-        :on-success="handleFileSuccess"
-        :auto-upload="false"
-        drag
-      >
+      <el-upload ref="upload" :limit="1" accept=".xlsx, .xls" :headers="upload.headers"
+        :action="upload.url + '?updateSupport=' + upload.updateSupport" :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress" :on-success="handleFileSuccess" :auto-upload="false" drag>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip text-center" slot="tip">
@@ -275,7 +178,8 @@
             <el-checkbox v-model="upload.updateSupport" /> 是否更新已经存在的用户数据
           </div>
           <span>仅允许导入xls、xlsx格式文件。</span>
-          <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;" @click="importTemplate">下载模板</el-link>
+          <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;"
+            @click="importTemplate">下载模板</el-link>
         </div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
@@ -287,7 +191,7 @@
 </template>
 
 <script>
-import { listIris,trainAndForecast,onlyForecast,addiris, getIris, delIris, updateIris, resetIrisPwd, changeIrisStatus, deptTreeSelect } from "@/api/system/iris";
+import { listIris, trainAndForecast, onlyForecast, addiris, getIris, delIris, updateIris, resetIrisPwd, changeIrisStatus, deptTreeSelect } from "@/api/system/iris";
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -297,8 +201,8 @@ export default {
   components: { Treeselect },
   data() {
     return {
-         // 默认排序
-         defaultSort: {prop: 'operTime', order: 'descending'},
+      // 默认排序
+      defaultSort: { prop: 'operTime', order: 'descending' },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -372,12 +276,12 @@ export default {
       // 表单校验
       rules: {
       },
-       // 模拟数据字典数据，类型数据
-       getType: [		
-          {dictValue: 1,dictLabel:'setosa'},
-          {dictValue: 2,dictLabel:'versicolor'},
-          {dictValue: 3,dictLabel:'virginica'}
-        ],
+      // 模拟数据字典数据，类型数据
+      getType: [
+        { dictValue: 1, dictLabel: 'setosa' },
+        { dictValue: 2, dictLabel: 'versicolor' },
+        { dictValue: 3, dictLabel: 'virginica' }
+      ],
     };
   },
   watch: {
@@ -394,7 +298,7 @@ export default {
     });
   },
   methods: {
-       /** 排序触发事件 */
+    /** 排序触发事件 */
     handleSortChange(column, prop, order) {
       this.queryParams.orderByColumn = column.prop;
       this.queryParams.isAsc = column.order;
@@ -404,10 +308,10 @@ export default {
     getList() {
       this.loading = true;
       listIris(this.addDateRangeWYR(this.queryParams, this.dateRange)).then(response => {
-          this.irisList = response.rows;
-          this.total = response.total;
-          this.loading = false;
-        }
+        this.irisList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      }
       );
     },
     // 筛选节点
@@ -423,11 +327,11 @@ export default {
     // 花瓣状态修改
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
-      this.$modal.confirm('确认要"' + text + '""' + row.petalLength + '"数据吗？').then(function() {
+      this.$modal.confirm('确认要"' + text + '""' + row.petalLength + '"数据吗？').then(function () {
         return changeIrisStatus(row.id, row.status);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
-      }).catch(function() {
+      }).catch(function () {
         row.status = row.status === "0" ? "1" : "0";
       });
     },
@@ -509,14 +413,14 @@ export default {
         this.form.password = "";
       });
     },
- 
+
     /** 分配角色操作 */
-    handleAuthRole: function(row) {
+    handleAuthRole: function (row) {
       const id = row.id;
       this.$router.push("/system/iris-auth/role/" + id);
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
@@ -537,21 +441,21 @@ export default {
         }
       });
     },
-    onlyForecastFun(row){
+    onlyForecastFun(row) {
       onlyForecast(row).then(response => {
-        window.alert(  response.msg  );
+        window.alert(response.msg);
       }
       );
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除用户编号/花瓣编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除用户编号/花瓣编号为"' + ids + '"的数据项？').then(function () {
         return delIris(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => { });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -565,11 +469,11 @@ export default {
       this.upload.open = true;
     },
 
-    
 
-    trainAndForecastFun(){
+
+    trainAndForecastFun() {
       trainAndForecast().then(response => {
-        window.alert(  response.msg  );
+        window.alert(response.msg);
       }
       );
     },
