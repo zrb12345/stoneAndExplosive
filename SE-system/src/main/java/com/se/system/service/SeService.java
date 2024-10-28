@@ -1,8 +1,8 @@
 package com.se.system.service;
 
 import com.se.common.service.BaseService;
-import com.se.system.domain.Iris;
-import com.se.system.service.dto.IrisQueryCriteria;
+import com.se.system.domain.Se;
+import com.se.system.service.dto.SeQueryCriteria;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.List;
 
 
 
-public interface IrisService extends BaseService<Iris>
+public interface SeService extends BaseService<Se>
 {
 
 
@@ -27,15 +27,15 @@ public interface IrisService extends BaseService<Iris>
      * @param criteria 参数 信息
      * @return 参数 集合
      */
-    List<Iris> selectIrisList(IrisQueryCriteria criteria);
+    List<Se> selectSeList(SeQueryCriteria criteria);
 
-    int save(List<Iris> cachedDataList);
+    int save(List<Se> cachedDataList);
 
-    Iris selectIrisById(Long deptId);
+    Se selectSeById(Long deptId);
 
-    int updateIris(Iris dept);
+    int updateSe(Se dept);
 
-    int deleteIrisById(Long deptId);
+    int deleteSeById(Long deptId);
     /**
      * 导入 数据
      *
@@ -44,5 +44,5 @@ public interface IrisService extends BaseService<Iris>
      * @param operName 操作用户
      * @return 结果
      */
-    String importIris(MultipartFile file, boolean updateSupport, String operName) throws IOException;
+    String importSe(MultipartFile file, boolean updateSupport, String operName) throws IOException;
 }

@@ -1,7 +1,7 @@
 package com.se.system.mapper;
 
 import com.se.common.mapper.CoreMapper;
-import com.se.system.domain.Iris;
+import com.se.system.domain.Se;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @author se
  */
 @Repository
-public interface IrisMapper extends CoreMapper<Iris>
+public interface SeMapper extends CoreMapper<Se>
 {
 
     /**
@@ -21,9 +21,9 @@ public interface IrisMapper extends CoreMapper<Iris>
      *  @Param(sysUserList) List<SysUser> sysUserList
      * @return 结果
      */
-    public int save(List<Iris> list );
+    public int insertList(List<Se> list );
 
-    public List<Iris> selectIrisList(Iris iris);
+    public List<Se> selectSeList(Se Se);
 
-    void insertIris(Iris iris);
+    void insertSe(Se Se);
 }

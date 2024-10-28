@@ -16,7 +16,6 @@
     </description>
 
     <dependencies>
-
 <!--        <dependency>-->
 <!--            <groupId>com.se</groupId>-->
 <!--            <artifactId>SE-common</artifactId>-->
@@ -105,13 +104,24 @@
             <version>3.2.0</version>
             <scope>compile</scope>
         </dependency>
-
-
-        <!--        <dependency>-->
-<!--            <groupId>cn.myeasyai</groupId>-->
-<!--            <artifactId>easyAi</artifactId>-->
-<!--            <version>1.2.8</version>-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>7.2.7</version>
+            <scope>compile</scope>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.oshi</groupId>-->
+<!--            <artifactId>oshi-core</artifactId>-->
 <!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.encog</groupId>-->
+<!--            <artifactId>encog-core</artifactId>-->
+<!--            <version>3.4</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
+
+
     </dependencies>
 
 </project>

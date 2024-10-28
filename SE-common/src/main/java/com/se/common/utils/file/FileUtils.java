@@ -283,4 +283,30 @@ public class FileUtils
         String baseName = FilenameUtils.getBaseName(fileName);
         return baseName;
     }
+    /**校验文件类型是否正确*/
+    public static Boolean isAvaliableType(String suffix)
+    {
+        // 判断是否是合法的文件后缀
+//            String ext = fileExt.substring(fileExt.lastIndexOf(".") + 1); //截取点后面的字符串   lastIndexOf返回最后一次出现的位置
+        if ("JPG".equalsIgnoreCase(suffix)) {
+            return true;
+        }
+        if ("PNG".equalsIgnoreCase(suffix)) {
+            return true;
+        }
+        if ("JPEG".equalsIgnoreCase(suffix)) {
+            return true;
+        }
+        if ("GIF".equalsIgnoreCase(suffix)) {
+            return true;
+        }
+        if ("xlsx".equalsIgnoreCase(suffix)) {
+            return true;
+        }
+        if ("csv".equalsIgnoreCase(suffix)) {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -1,10 +1,11 @@
 package com.se.system.service.impl;
 
 import com.se.common.core.domain.AjaxResult;
-import com.se.system.domain.Iris;
+import com.se.system.domain.Se;
 import lombok.Data;
 import org.wlld.randomForest.DataTable;
 import org.wlld.randomForest.RandomForest;
+import org.wlld.regressionForest.RegressionForest;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +19,9 @@ public class GlobalObject {
     private DataObject dataObject;
     //模型初始化是 0 已经训练过了是 1
     private int state;
+    //随机森林,用于分类,只能是已经存在的类型 还要搞一个回归森林 用于预测没有的数据
     private RandomForest rf;
+    private RegressionForest gf;
     private GlobalObject() {
         this.dataObject = new DataObject();
         //column代表属性名
@@ -37,6 +40,8 @@ public class GlobalObject {
             //树的个数不宜太多 也不宜太少 最好接近属性的数量
             rf = new RandomForest(5);
             rf.init(dataTable);//唤醒随机森林的树
+
+//            gf = new RegressionForest(5);
             state = 0;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -52,13 +57,13 @@ public class GlobalObject {
         }
         return instance;
     }
-    public AjaxResult trainModel(List<Iris> datas){
+    public AjaxResult trainModel(List<Se> datas){
         try {
             //创建实体类,输入数据
-            Iris query = new Iris();
+            Se query = new Se();
             query.setIsDel(0);
-//            List<Iris> datas = irisService.selectIrisList(query);
-            for (Iris data : datas) {
+//            List<Se> datas = seService.selectSeList(query);
+            for (Se data : datas) {
                 rf.insert(data);
             }
             rf.study();
@@ -66,14 +71,14 @@ public class GlobalObject {
             StringBuilder str = new StringBuilder("错误信息 : ");
             int errorCount = 0;
             for (int i = 0; i < datas.size(); i++) {
-                Iris iris = datas.get(i);
-                int point = rf.forest(iris);
-                if(point!=iris.getType())
+                Se se = datas.get(i);
+                int point = rf.forest(se);
+                if(point!=se.getType())
                 {
                     errorCount++;
                     //预测出这个是什么花
-                    System.out.println("预测错了 "+iris.getId()+" 应该是 "+ iris.getType()+" 预测成了 "+ point);
-                    str.append("预测错了 "+iris.getId()+" 应该是 "+ iris.getType()+" 预测成了 "+ point);
+                    System.out.println("预测错了 "+se.getId()+" 应该是 "+ se.getType()+" 预测成了 "+ point);
+                    str.append("预测错了 "+se.getId()+" 应该是 "+ se.getType()+" 预测成了 "+ point);
                 }
             }
             float errorpercent = (float)errorCount/datas.size();

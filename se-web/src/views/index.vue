@@ -19,20 +19,28 @@
       <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
         @pagination="getList" />
     </el-row>
+    <el-row>
+      <el-form :model="upform" :rules="uprules" style="width:100%;" ref="upform" label-width="100px">
+        <el-form-item label="上传附件:">
+          <el-button type="primary" @click="upLoad()" size="mini" class="form-btn">点击上传</el-button>
+        </el-form-item>
+      </el-form>
+    </el-row>
   </div>
 
 </template>
 <script>
-import { listIris, } from "@/api/system/iris";
+import { listSe } from "@/api/system/se";
+import { uploadFile } from "@/api/system/qiniu";
 export default {
 
-  name: "Iris",
-  // dicts: ['sys_normal_disable', 'sys_iris_sex'],
+  name: "Se",
+  // dicts: ['sys_normal_disable', 'sys_se_sex'],
   // components: { Treeselect },
   data() {
     return {
       // 用户表格数据
-      irisList: null,
+      seList: null,
       loading: true,
       // 总条数
       total: 0,
@@ -41,6 +49,23 @@ export default {
         pageSize: 10,
 
       },
+      upform: {
+        username: "admin",
+        password: "admin123",
+        rememberMe: false,
+        code: "",
+        uuid: ""
+      },
+      uprules: {
+        username: [
+          { required: true, trigger: "blur", message: "请输入您的账号" }
+        ],
+        password: [
+          { required: true, trigger: "blur", message: "请输入您的密码" }
+        ],
+        code: [{ required: true, trigger: "change", message: "请输入验证码" }]
+      },
+      // upform: "http://sl0ntpo8c.hn-bkt.clouddn.com/085bb8645c9743bfbecb49532d5d9445.png",
       demoArray: [],
       sudokus: [
         {
@@ -73,11 +98,14 @@ export default {
     }
   },
   methods: {
+    uploadFileQN() {
+      uploadFile()
+    },
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      listIris(this.addDateRangeWYR(this.queryParams, this.dateRange)).then(response => {
-        this.irisList = response.rows;
+      listSe(this.addDateRangeWYR(this.queryParams, this.dateRange)).then(response => {
+        this.seList = response.rows;
         this.total = response.total;
         this.loading = false;
       }
@@ -98,7 +126,57 @@ export default {
     showInfo(item) {
       console.log(item.name);
       console.log(item.status);
-    }
+    },
+    // 请求-上传附件
+    upLoad() {
+      const _this = this;
+      //   const fileType = [
+      //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      //     "application/vnd.ms-excel"
+      //   ];
+      const fileType = ['xls', 'xlsx', 'et', 'png']
+      const inputFile = document.createElement("input")
+      inputFile.type = "file"
+      inputFile.style.display = "none"
+      document.body.appendChild(inputFile)
+      inputFile.click()
+      inputFile.addEventListener("change", function () {
+        const file = inputFile.files[0];
+        var testmsg = file.name.substring(file.name.lastIndexOf('.') + 1)
+        if (!fileType.includes(testmsg)) {
+          _this.$message.warning("上传的文件格式只能是,xls,xlsx,et");
+          document.body.removeChild(inputFile);
+          return false;
+        }
+        const formData = new FormData();
+        formData.append("file", file);
+        uploadFile(formData).then(response => {
+          if (response.code == 200) {
+            _this.$message.success(response.message || '导入成功')
+
+          } else {
+            _this.$message.error(response.message || '导入失败')
+          }
+          document.body.removeChild(inputFile)
+        })
+        // window.request({
+        //   url: 'xxx/xxx',
+        //   data: formData,
+        //   success: (res) => {
+        //     if (res.code === 200) {
+        //       _this.$message.success(res.message || "导入成功");
+        //       _this.getTableList();
+        //     } else {
+        //       _this.$message.success("导入失败");
+        //     }
+
+        //   },
+        //   finally: () => {
+        //     document.body.removeChild(inputFile);
+        //   }
+        // })
+      })
+    },
   }
 };
 </script>

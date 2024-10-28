@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2020-05-12
  */
 @Data
-public class IrisQueryCriteria {
+public class SeQueryCriteria {
 
     // 模糊
     @Query(type = Query.Type.UNIX_TIMESTAMP)
@@ -22,17 +22,20 @@ public class IrisQueryCriteria {
 
     // 模糊
     @Query
-    private Integer sepalLength;
+    private Integer averageBlockSize;
 
     // 模糊
     @Query
-    private Integer sepalWidth;
+    private Integer boulderYield;
 
     @Query
-    private Integer petalLength;
+    private Integer specificCharge;
 
     @Query
-    private Integer petalWidth;
+    private Integer overexcavationThickness;
+
+
+
 
     @Query
     private Integer state;

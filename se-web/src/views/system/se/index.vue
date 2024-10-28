@@ -1,16 +1,20 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <!--用户数据-->
+      <!--用户数据
+平均块度     average_block_size  averageBlockSize 平均块度
+大块率        boulder_yield   boulderYield 大块率
+炸药单耗     specific_charge specificCharge 炸药单耗
+超挖厚度     overexcavation_thickness overexcavationThickness 超挖厚度-->
       <el-col :span="24" :xs="24">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
           label-width="68px">
-          <el-form-item label="花瓣长度" prop="petalLength">
-            <el-input v-model="queryParams.petalLength" placeholder="请输入花瓣长度" clearable style="width: 240px"
+          <el-form-item label="平均块度" prop="averageBlockSize">
+            <el-input v-model="queryParams.averageBlockSize" placeholder="请输入平均块度" clearable style="width: 240px"
               @keyup.enter.native="handleQuery" />
           </el-form-item>
-          <el-form-item label="花瓣宽度" prop="petalWidth">
-            <el-input v-model="queryParams.petalWidth" placeholder="请输入花瓣宽度" clearable style="width: 240px"
+          <el-form-item label="大块率" prop="boulderYield">
+            <el-input v-model="queryParams.boulderYield" placeholder="请输入大块率" clearable style="width: 240px"
               @keyup.enter.native="handleQuery" />
           </el-form-item>
           <el-form-item label="状态" prop="status">
@@ -32,44 +36,44 @@
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-              v-hasPermi="['system:iris:add']">新增</el-button>
+              v-hasPermi="['system:se:add']">新增</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-              v-hasPermi="['system:iris:edit']">修改</el-button>
+              v-hasPermi="['system:se:edit']">修改</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-              v-hasPermi="['system:iris:remove']">删除</el-button>
+              v-hasPermi="['system:se:remove']">删除</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button type="info" plain icon="el-icon-upload2" size="mini" @click="handleImport"
-              v-hasPermi="['system:iris:import']">导入</el-button>
+              v-hasPermi="['system:se:import']">导入</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button type="normal" plain icon="el-icon-upload2" size="mini" @click="trainAndForecastFun"
-              v-hasPermi="['system:iris:import']">训练</el-button>
+              v-hasPermi="['system:se:import']">训练</el-button>
           </el-col>
 
           <el-col :span="1.5">
             <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-              v-hasPermi="['system:iris:export']">导出</el-button>
+              v-hasPermi="['system:se:export']">导出</el-button>
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="irisList" @selection-change="handleSelectionChange"
+        <el-table v-loading="loading" :data="seList" @selection-change="handleSelectionChange"
           :default-sort="defaultSort" @sort-change="handleSortChange">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="花瓣编号" align="center" key="id" prop="id" v-if="columns[0].visible" />
-          <el-table-column label="花瓣长度" align="center" key="petalLength" prop="petalLength" v-if="columns[1].visible"
-            :show-overflow-tooltip="true" />
-          <el-table-column label="花萼长度" align="center" key="sepalLength" prop="sepalLength" v-if="columns[2].visible"
-            :show-overflow-tooltip="true" />
-          <el-table-column label="花瓣宽度" align="center" key="petalWidth" prop="petalWidth" v-if="columns[3].visible"
+          <el-table-column label="平均块度" align="center" key="averageBlockSize" prop="averageBlockSize"
+            v-if="columns[1].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="炸药单耗" align="center" key="specificCharge" prop="specificCharge"
+            v-if="columns[2].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="大块率" align="center" key="boulderYield" prop="boulderYield" v-if="columns[3].visible"
             width="120" />
-          <el-table-column label="花萼宽度" align="center" key="sepalWidth" prop="sepalWidth" v-if="columns[4].visible"
-            :show-overflow-tooltip="true" />
+          <el-table-column label="超挖厚度" align="center" key="overexcavationThickness" prop="overexcavationThickness"
+            v-if="columns[4].visible" :show-overflow-tooltip="true" />
           <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
             <template slot-scope="scope">
               <el-switch v-model="scope.row.status" active-value="0" inactive-value="1"
@@ -88,16 +92,16 @@
           <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width">
             <template slot-scope="scope" v-if="scope.row.id !== 1">
               <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:iris:edit']">修改</el-button>
+                v-hasPermi="['system:se:edit']">修改</el-button>
               <el-button size="mini" type="text" icon="el-icon-edit" @click="onlyForecastFun(scope.row)"
-                v-hasPermi="['system:iris:edit']"> 预测</el-button>
+                v-hasPermi="['system:se:edit']"> 预测</el-button>
               <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-                v-hasPermi="['system:iris:remove']">删除</el-button>
-              <!-- <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:iris:resetPwd', 'system:iris:edit']">
+                v-hasPermi="['system:se:remove']">删除</el-button>
+              <!-- <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:se:resetPwd', 'system:se:edit']">
                 <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
-                    v-hasPermi="['system:iris:edit']">分配角色</el-dropdown-item>
+                    v-hasPermi="['system:se:edit']">分配角色</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown> -->
             </template>
@@ -114,28 +118,28 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="花萼长度" prop="sepalLength">
-              <el-input v-model="form.sepalLength" placeholder="请输入花萼长度" maxlength="30" />
+            <el-form-item label="炸药单耗" prop="specificCharge">
+              <el-input v-model="form.specificCharge" placeholder="请输入炸药单耗" maxlength="30" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="花萼宽度" prop="sepalWidth">
-              <el-input v-model="form.sepalWidth" placeholder="请输入花萼宽度" maxlength="30" />
-              <!-- <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门/花萼宽度" /> -->
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="花瓣宽度" prop="petalWidth">
-              <el-input v-model="form.petalWidth" placeholder="请输入花瓣宽度" maxlength="11" />
+            <el-form-item label="超挖厚度" prop="overexcavationThickness">
+              <el-input v-model="form.overexcavationThickness" placeholder="请输入超挖厚度" maxlength="30" />
+              <!-- <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门/超挖厚度" /> -->
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item v-if="form.id == undefined" label="花瓣长度" prop="petalLength">
-              <el-input v-model="form.petalLength" placeholder="请输入花瓣长度" maxlength="30" />
+            <el-form-item label="大块率" prop="boulderYield">
+              <el-input v-model="form.boulderYield" placeholder="请输入大块率" maxlength="11" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item v-if="form.id == undefined" label="平均块度" prop="averageBlockSize">
+              <el-input v-model="form.averageBlockSize" placeholder="请输入平均块度" maxlength="30" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -145,7 +149,7 @@
               <el-radio-group v-model="form.status">
                 <el-radio v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.value">{{
                   dict.label
-                  }}</el-radio>
+                }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -191,13 +195,13 @@
 </template>
 
 <script>
-import { listIris, trainAndForecast, onlyForecast, addiris, getIris, delIris, updateIris, resetIrisPwd, changeIrisStatus, deptTreeSelect } from "@/api/system/iris";
+import { listSe, trainAndForecast, onlyForecast, addse, getSe, delSe, updateSe, resetSePwd, changeSeStatus, deptTreeSelect } from "@/api/system/se";
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
-  name: "Iris",
-  dicts: ['sys_normal_disable', 'sys_iris_sex'],
+  name: "Se",
+  dicts: ['sys_normal_disable'],//, 'sys_se_sex'
   components: { Treeselect },
   data() {
     return {
@@ -216,15 +220,12 @@ export default {
       // 总条数
       total: 0,
       // 用户表格数据
-      irisList: null,
+      seList: null,
       // 弹出层标题
       title: "",
-      // 部门/花萼宽度树选项
-      // deptOptions: undefined,
       // 是否显示弹出层
       open: false,
-      // 部门/花萼宽度名称
-      sepalWidth: undefined,
+      overexcavationThickness: undefined,
       // 默认密码
       initPassword: undefined,
       // 日期范围
@@ -252,24 +253,24 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/system/iris/importData"
+        url: process.env.VUE_APP_BASE_API + "/system/se/importData"
       },
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        petalLength: undefined,
-        petalWidth: undefined,
+        averageBlockSize: undefined,
+        boulderYield: undefined,
         status: undefined,
         deptId: undefined
       },
       // 列信息
       columns: [
         { key: 0, label: `花瓣编号`, visible: true },
-        { key: 1, label: `花瓣长度`, visible: true },
-        { key: 2, label: `花萼长度`, visible: true },
-        { key: 3, label: `花萼宽度`, visible: true },
-        { key: 4, label: `花瓣宽度`, visible: true },
+        { key: 1, label: `平均块度`, visible: true },
+        { key: 2, label: `炸药单耗`, visible: true },
+        { key: 3, label: `超挖厚度`, visible: true },
+        { key: 4, label: `大块率`, visible: true },
         { key: 5, label: `状态`, visible: true },
         { key: 6, label: `创建时间`, visible: true }
       ],
@@ -278,22 +279,32 @@ export default {
       },
       // 模拟数据字典数据，类型数据
       getType: [
-        { dictValue: 1, dictLabel: 'setosa' },
-        { dictValue: 2, dictLabel: 'versicolor' },
-        { dictValue: 3, dictLabel: 'virginica' }
+        { dictValue: 1, dictLabel: '二级岩石乳化炸药' },
+        { dictValue: 2, dictLabel: '岩石膨化硝铵炸药' },
+        { dictValue: 3, dictLabel: '铵梯炸药' },
+        { dictValue: 4, dictLabel: '浆状炸药' },
+        { dictValue: 5, dictLabel: '粉状铵油炸药' },
+        { dictValue: 6, dictLabel: '多孔粒状铵油炸药' },
+        { dictValue: 7, dictLabel: '重铵油炸药' },
+        { dictValue: 8, dictLabel: '1#混装乳化炸药' },
+        { dictValue: 9, dictLabel: '2#混装乳化炸药' },
+        { dictValue: 10, dictLabel: '3#混装乳化炸药' },
+        { dictValue: 11, dictLabel: '4#混装乳化炸药' },
+        { dictValue: 12, dictLabel: '5#混装乳化炸药' },
+        { dictValue: 13, dictLabel: '6#混装乳化炸药' }
       ],
     };
   },
   watch: {
     // 根据名称筛选部门/花萼宽度树
-    sepalWidth(val) {
+    overexcavationThickness(val) {
       this.$refs.tree.filter(val);
     }
   },
   created() {
     this.getList();
     // this.getDeptTree();
-    this.getConfigKey("sys.iris.initPassword").then(response => {
+    this.getConfigKey("sys.se.initPassword").then(response => {
       this.initPassword = response.msg;
     });
   },
@@ -307,8 +318,8 @@ export default {
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      listIris(this.addDateRangeWYR(this.queryParams, this.dateRange)).then(response => {
-        this.irisList = response.rows;
+      listSe(this.addDateRangeWYR(this.queryParams, this.dateRange)).then(response => {
+        this.seList = response.rows;
         this.total = response.total;
         this.loading = false;
       }
@@ -327,8 +338,8 @@ export default {
     // 花瓣状态修改
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
-      this.$modal.confirm('确认要"' + text + '""' + row.petalLength + '"数据吗？').then(function () {
-        return changeIrisStatus(row.id, row.status);
+      this.$modal.confirm('确认要"' + text + '""' + row.averageBlockSize + '"数据吗？').then(function () {
+        return changeSeStatus(row.id, row.status);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
       }).catch(function () {
@@ -345,10 +356,10 @@ export default {
       this.form = {
         id: undefined,
         deptId: undefined,
-        petalLength: undefined,
-        sepalLength: undefined,
+        averageBlockSize: undefined,
+        specificCharge: undefined,
         password: undefined,
-        petalWidth: undefined,
+        boulderYield: undefined,
         email: undefined,
         sex: undefined,
         status: "0",
@@ -390,7 +401,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      getIris().then(response => {
+      getSe().then(response => {
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
         this.open = true;
@@ -402,7 +413,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getIris(id).then(response => {
+      getSe(id).then(response => {
         this.form = response.data;
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
@@ -417,14 +428,14 @@ export default {
     /** 分配角色操作 */
     handleAuthRole: function (row) {
       const id = row.id;
-      this.$router.push("/system/iris-auth/role/" + id);
+      this.$router.push("/system/se-auth/role/" + id);
     },
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateIris(this.form).then(response => {
+            updateSe(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
@@ -432,7 +443,7 @@ export default {
           } else {
             let list1 = new Array();
             list1.push(this.form);
-            addiris(list1).then(response => {
+            addse(list1).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -451,7 +462,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$modal.confirm('是否确认删除用户编号/花瓣编号为"' + ids + '"的数据项？').then(function () {
-        return delIris(ids);
+        return delSe(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -459,9 +470,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/iris/export', {
+      this.download('system/se/export', {
         ...this.queryParams
-      }, `iris_${new Date().getTime()}.xlsx`)
+      }, `se_${new Date().getTime()}.xlsx`)
     },
     /** 导入按钮操作 */
     handleImport() {
@@ -479,8 +490,8 @@ export default {
     },
     /** 下载模板操作 */
     importTemplate() {
-      this.download('system/iris/importTemplate', {
-      }, `iris_template_${new Date().getTime()}.xlsx`)
+      this.download('system/se/importTemplate', {
+      }, `se_template_${new Date().getTime()}.xlsx`)
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {

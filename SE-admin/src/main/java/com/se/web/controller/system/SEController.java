@@ -5,9 +5,10 @@ import com.se.common.core.controller.BaseController;
 import com.se.common.core.domain.AjaxResult;
 import com.se.common.core.page.TableDataInfo;
 import com.se.common.enums.BusinessType;
-import com.se.system.domain.Iris;
-import com.se.system.service.IrisService;
-import com.se.system.service.dto.IrisQueryCriteria;
+import com.se.system.domain.Se;
+import com.se.system.service.SeService;
+import com.se.system.service.dto.SeQueryCriteria;
+//import com.se.system.service.impl.ApacheFG;
 import com.se.system.service.impl.GlobalObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,21 +26,21 @@ import java.util.List;
  * @author se
  */
 @RestController
-@RequestMapping("/system/iris")
-public class IrisController extends BaseController
+@RequestMapping("/system/se")
+public class SEController extends BaseController
 {
     @Autowired
-    private IrisService irisService;
+    private SeService seService;
 
     /**
      * 获取数据列表
      */
     @PreAuthorize("@ss.hasPermi('system:dept:list')")
     @GetMapping("/list")
-    public TableDataInfo list(IrisQueryCriteria iris)
+    public TableDataInfo list(SeQueryCriteria Se)
     {
         startPage();
-        List<Iris> list = irisService.selectIrisList(iris);
+        List<Se> list = seService.selectSeList(Se);
 
         return getDataTable(list);
 //        return success(depts);
@@ -52,7 +53,7 @@ public class IrisController extends BaseController
 //    @GetMapping("/list/exclude/{deptId}")
 //    public AjaxResult excludeChild(@PathVariable(value = "deptId", required = false) Long deptId)
 //    {
-//        List<Iris> depts = irisService.selectIrisList(new Iris());
+//        List<Se> depts = SeService.selectSeList(new Se());
 //        depts.removeIf(d -> d.getId().intValue() == deptId || ArrayUtils.contains(StringUtils.split(d.getStatus(), ","), deptId + ""));
 //        return success(depts);
 //    }
@@ -64,8 +65,8 @@ public class IrisController extends BaseController
     @GetMapping(value = "/{deptId}")
     public AjaxResult getInfo(@PathVariable Long deptId)
     {
-//        irisService.checkIrisDataScope(deptId);
-        return success(irisService.selectIrisById(deptId));
+//        SeService.checkSeDataScope(deptId);
+        return success(seService.selectSeById(deptId));
     }
 
     /**
@@ -74,17 +75,17 @@ public class IrisController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:dept:add')")
     @Log(title = "数据管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody List<Iris> iris)
+    public AjaxResult add(@Validated @RequestBody List<Se> Se)
     {
-//        if (!irisService.checkIrisNameUnique(iris))
+//        if (!seService.checkSeNameUnique(Se))
 //        {
-//            return error("新增数据'" + iris.getType() + "'失败，类型已存在");
+//            return error("新增数据'" + Se.getType() + "'失败，类型已存在");
 //        }
-        for (int i = 0; i < iris.size(); i++) {
-            Iris item = iris.get(i);
+        for (int i = 0; i < Se.size(); i++) {
+            Se item = Se.get(i);
             item.setCreateBy( getUsername());
         }
-        return toAjax(irisService.save(iris));
+        return toAjax(seService.save(Se));
     }
 
     /**
@@ -93,24 +94,24 @@ public class IrisController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:dept:edit')")
     @Log(title = "数据管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody Iris dept)
+    public AjaxResult edit(@Validated @RequestBody Se dept)
     {
 //        Long deptId = dept.getId();
-//        irisService.checkIrisDataScope(deptId);
-//        if (!irisService.checkIrisNameUnique(dept))
+//        seService.checkSeDataScope(deptId);
+//        if (!seService.checkSeNameUnique(dept))
 //        {
-//            return error("修改数据'" + dept.getIrisName() + "'失败，数据名称已存在");
+//            return error("修改数据'" + dept.getSeName() + "'失败，数据名称已存在");
 //        }
 //        else if (dept.getParentId().equals(deptId))
 //        {
-//            return error("修改数据'" + dept.getIrisName() + "'失败，上级数据不能是自己");
+//            return error("修改数据'" + dept.getSeName() + "'失败，上级数据不能是自己");
 //        }
-//        else if (StringUtils.equals(UserConstants.DEPT_DISABLE, dept.getStatus()) && irisService.selectNormalChildrenIrisById(deptId) > 0)
+//        else if (StringUtils.equals(UserConstants.DEPT_DISABLE, dept.getStatus()) && seService.selectNormalChildrenSeById(deptId) > 0)
 //        {
 //            return error("该数据包含未停用的子数据！");
 //        }
         dept.setUpdateBy(getUsername());
-        return toAjax(irisService.updateIris(dept));
+        return toAjax(seService.updateSe(dept));
     }
 
     /**
@@ -121,10 +122,10 @@ public class IrisController extends BaseController
     @DeleteMapping("/{deptId}")
     public AjaxResult remove(@PathVariable Long deptId)
     {
-        return toAjax(irisService.deleteIrisById(deptId));
+        return toAjax(seService.deleteSeById(deptId));
     }
 
-    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
+    @Log(title = " ", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:user:import')")
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport)
@@ -132,7 +133,7 @@ public class IrisController extends BaseController
         //输入数据
         String operName = getUsername();
         try {
-            String message = irisService.importIris(file, updateSupport, operName);
+            String message = seService.importSe(file, updateSupport, operName);
             return success(message);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -146,16 +147,19 @@ public class IrisController extends BaseController
     public AjaxResult  trainAndForecast( )
     {
         GlobalObject globalObject = GlobalObject.getInstance();
-        IrisQueryCriteria criteria = new IrisQueryCriteria();
+        SeQueryCriteria criteria = new SeQueryCriteria();
         criteria.setIsDel(0);
-        List<Iris> datas = irisService.selectIrisList(criteria);
+        List<Se> datas = seService.selectSeList(criteria);
         return globalObject.trainModel(datas);
     }
     //模型训练出来后，根据模型生成判断结果
     @Log(title = "模型使用", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:user:import')")
     @PostMapping("/onlyForecast")
-    public AjaxResult  onlyForecast(@RequestBody Iris iris ){
+    public AjaxResult  onlyForecast(@RequestBody Se Se ){
+
+//       ApacheFG.getGF2();
+
         String str = "预测结果是 : ";
         GlobalObject globalObject = GlobalObject.getInstance();
         RandomForest rf = globalObject.getRf();
@@ -163,7 +167,7 @@ public class IrisController extends BaseController
             return error("模型还没有训练完成,请先训练模型");
         }
         try {
-           int type =  rf.forest(iris);
+           int type =  rf.forest(Se);
             switch (type){
                 case 1: str+="setosa";break;
                 case 2: str+="versicolor";break;
@@ -175,6 +179,7 @@ public class IrisController extends BaseController
         }
 
     }
+
 
 
 }

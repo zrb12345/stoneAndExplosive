@@ -2,26 +2,26 @@ import request from '@/utils/request'
 import { parseStrEmpty } from "@/utils/se";
 
 // 查询用户列表
-export function listIris(query) {
+export function listSe(query) {
   return request({
-    url: '/system/iris/list',
+    url: '/system/se/list',
     method: 'get',
     params: query
   })
 }
 
 // 查询用户详细
-export function getIris(irisId) {
+export function getSe(seId) {
   return request({
-    url: '/system/iris/' + parseStrEmpty(irisId),
+    url: '/system/se/' + parseStrEmpty(seId),
     method: 'get'
   })
 }
 
 // 新增数据
-export function addiris(data) {
+export function addse(data) {
   return request({
-    url: '/system/iris',
+    url: '/system/se',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addiris(data) {
 // 训练模型和预测
 export function trainAndForecast(data) {
   return request({
-    url: '/system/iris/trainAndForecast',
+    url: '/system/se/trainAndForecast',
     method: 'post',
     data: data
   })
@@ -37,7 +37,7 @@ export function trainAndForecast(data) {
 //  模型 预测
 export function onlyForecast(data) {
   return request({
-    url: '/system/iris/onlyForecast',
+    url: '/system/se/onlyForecast',
     method: 'post',
     data: data
   })
@@ -45,91 +45,84 @@ export function onlyForecast(data) {
 
 
 // 修改用户
-export function updateIris(data) {
+export function updateSe(data) {
   return request({
-    url: '/system/iris',
+    url: '/system/se',
     method: 'put',
     data: data
   })
 }
 
 // 删除用户
-export function delIris(irisId) {
+export function delSe(seId) {
   return request({
-    url: '/system/iris/' + irisId,
+    url: '/system/se/' + seId,
     method: 'delete'
   })
 }
 
 // 用户密码重置
-export function resetIrisPwd(irisId, password) {
+export function resetSePwd(seId, password) {
   const data = {
-    irisId,
+    seId,
     password
   }
   return request({
-    url: '/system/iris/resetPwd',
+    url: '/system/se/resetPwd',
     method: 'put',
     data: data
   })
 }
 
 // 用户状态修改
-export function changeIrisStatus(irisId, status) {
+export function changeSeStatus(seId, status) {
   const data = {
-    irisId,
+    seId,
     status
   }
   return request({
-    url: '/system/iris/changeStatus',
+    url: '/system/se/changeStatus',
     method: 'put',
     data: data
   })
 }
 
 // 查询用户个人信息
-export function getIrisProfile() {
+export function getSeProfile() {
   return request({
-    url: '/system/iris/profile',
+    url: '/system/se/profile',
     method: 'get'
   })
 }
 
 // 修改用户个人信息
-export function updateIrisProfile(data) {
+export function updateSeProfile(data) {
   return request({
-    url: '/system/iris/profile',
+    url: '/system/se/profile',
     method: 'put',
     data: data
   })
 }
 
 // 用户密码重置
-export function updateIrisPwd(oldPassword, newPassword) {
+export function updateSePwd(oldPassword, newPassword) {
   const data = {
     oldPassword,
     newPassword
   }
   return request({
-    url: '/system/iris/profile/updatePwd',
+    url: '/system/se/profile/updatePwd',
     method: 'put',
     params: data
   })
 }
 
-// 用户头像上传
-export function uploadAvatar(data) {
-  return request({
-    url: '/system/iris/profile/avatar',
-    method: 'post',
-    data: data
-  })
-}
+
 
 // 查询授权角色
-export function getAuthRole(irisId) {
+export function getAuthRole(seId) {
   return request({
-    url: '/system/iris/authRole/' + irisId,
+    url: '/system/se/authRole/' + seId,
     method: 'get'
   })
 }
@@ -137,7 +130,7 @@ export function getAuthRole(irisId) {
 // 保存授权角色
 export function updateAuthRole(data) {
   return request({
-    url: '/system/iris/authRole',
+    url: '/system/se/authRole',
     method: 'put',
     params: data
   })
@@ -146,7 +139,7 @@ export function updateAuthRole(data) {
 // 查询部门下拉树结构
 export function deptTreeSelect() {
   return request({
-    url: '/system/iris/deptTree',
+    url: '/system/se/deptTree',
     method: 'get'
   })
 }
