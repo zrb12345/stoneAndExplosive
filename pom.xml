@@ -37,6 +37,12 @@
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-starter-tomcat</artifactId>-->
+                <!-- 也有人说这个 provided 可能有问题，具体可以自行测试-->
+<!--                <scope>provided</scope>-->
+<!--            </dependency>-->
 
             <!-- SpringFramework的依赖配置-->
             <dependency>

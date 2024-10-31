@@ -470,9 +470,11 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/se/export', {
-        ...this.queryParams
-      }, `se_${new Date().getTime()}.xlsx`)
+
+
+      // this.download('system/se/export', {
+      // ...this.queryParams
+      // }, `se_${new Date().getTime()}.xlsx`)
     },
     /** 导入按钮操作 */
     handleImport() {

@@ -11,20 +11,28 @@ public class Se extends BaseDomain {
 
     @Excel(name = "参数主键", cellType = Excel.ColumnType.NUMERIC)
     private Integer id;
-    @ExcelProperty("abs")
+//    @ExcelProperty("abs")
+//small	medimu	large	larger	label	label1	prediction
+
+    @ExcelProperty("small")
     //平均块度
     private Integer averageBlockSize;
-    @ExcelProperty("by")
+//    @ExcelProperty("by")
+    @ExcelProperty("medimu")
     //大块率
     private Integer boulderYield;
-    @ExcelProperty("sc")
+//    @ExcelProperty("sc")
+    @ExcelProperty("large")
     //炸药单耗
     private Integer specificCharge;
-    @ExcelProperty("ot")
+//    @ExcelProperty("ot")
+    @ExcelProperty("larger")
     //超挖厚度
     private Integer overexcavationThickness;
-    @ExcelProperty("Spe")
+//    @ExcelProperty("Spe")
+    @ExcelProperty("prediction")
     private Integer type;
+
     private String createBy;
     private String status;
 
