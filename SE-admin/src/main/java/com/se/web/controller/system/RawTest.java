@@ -1,3 +1,25 @@
+import com.se.common.annotation.Log;
+import com.se.common.core.domain.AjaxResult;
+import com.se.common.enums.BusinessType;
+import com.se.system.domain.Se;
+import com.se.web.controller.system.Student;
+import org.apache.spark.ml.Pipeline;
+import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.PipelineStage;
+import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.ml.regression.RandomForestRegressor;
+import org.apache.spark.sql.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 //package com.se.web.controller.system;
 //
 //import lombok.val;
@@ -172,3 +194,107 @@
 //// 关闭SparkSession
 //        spark.stop();
 //    }
+////模型训练出来后，根据模型生成判断结果
+//@Log(title = "模型使用", businessType = BusinessType.IMPORT)
+//@PreAuthorize("@ss.hasPermi('system:user:import')")
+//@PostMapping("/onlyForecastLabel")
+//public AjaxResult onlyForecastLabel(@RequestBody Se Se ) throws IOException {
+////       ApacheFG.getGF2();
+//    // Load and parse the data file, converting it to a DataFrame.
+//    SparkSession spark = SparkSession.builder().appName("RandomForestRegression").master("local").getOrCreate();
+//    Dataset<Row> data = spark.read().format("csv")
+//            .option("header","true")
+//            .option("inferSchema","true")
+//            .load("data.csv");
+//    String [] features = {"small", "medimu","large","larger"};
+//// Automatically identify categorical features, and index them.
+//// Set maxCategories so features with > 4 distinct values are treated as continuous.
+//    VectorAssembler featureIndexer = new VectorAssembler()
+//            .setInputCols(features)
+//            .setOutputCol("label1");
+//// Split the data into training and test sets (30% held out for testing)
+//    Dataset<Row>[] splits = data.randomSplit(new double[] {0.9, 0.1});
+//    Dataset<Row> trainingData = splits[0];
+////        reflectTransform(spark);
+//    List<Student> studentList = new ArrayList<>();
+//    Student stu1 = new Student() ;
+//    stu1.setSmall(202);
+//    stu1.setMedimu(331);
+//    stu1.setLarge(336);
+//    stu1.setLarger(46);
+//    stu1.setLabel(420);
+//    Student stu2 = new Student() ;
+//    stu2.setSmall(196);
+//    stu2.setMedimu(348);
+//    stu2.setLarge(326);
+//    stu2.setLarger(35);
+//    stu2.setLabel(350);
+//    Student stu3 = new Student() ;
+//    stu3.setSmall(172);
+//    stu3.setMedimu(394);
+//    stu3.setLarge(218);
+//    stu3.setLarger(35);
+//    stu3.setLabel(350);
+//    studentList.add(stu1);
+//    studentList.add(stu2);
+//    studentList.add(stu3);
+////        Dataset dataFrame = spark.createDataFrame(studentList, Student.class);
+////        and these lines to create a typed Dataset:
+//    Encoder encoder = Encoders.bean(Student.class);
+//    Dataset<Row> dataset = spark.createDataset(studentList, encoder);
+//    Dataset<Row> testData = splits[1];
+//
+//    String modelPath = "C:/"+getUsername()+"/model/label";
+//    File file = new File(modelPath);
+////        File[] tempList1 = file2.listFiles();
+//    if(!file.exists()) {
+//        // Train a RandomForest model.
+//        RandomForestRegressor rf = new RandomForestRegressor()
+//                .setLabelCol("label")
+//                .setFeaturesCol("label1")
+//                .setNumTrees(10); // 设置树的数量，默认是10;
+//// Chain indexer and forest in a Pipeline
+//        Pipeline pipeline = new Pipeline()
+//                .setStages(new PipelineStage[]{featureIndexer, rf});
+//// Train model. This also runs the indexer.
+//        PipelineModel model = pipeline.fit(trainingData);
+//// Make predictions.
+//        Dataset<Row> predictions = model.transform(testData);
+//        Dataset<Row> predictions2 = model.transform(dataset);
+//        Map<String, String> writeOpts = new HashMap<>();
+////        file_name = os.path.basename(item)  # 带了扩展名（.CSV）的文件名
+////# 将归一化后的数据存到新的路径下
+////                inter_path = os.path.join(root1, cla,file_name)
+////        df1.to_csv(inter_path, mode='w', index=False)
+//        model.save(modelPath);
+//        List<Double> types = predictions.limit(1).select("prediction").as(Encoders.DOUBLE()).collectAsList();
+//        return success("预测结果是"+types.get(0));
+//    }else{
+//        // 模型存储地址
+//        PipelineModel pipelineModel = PipelineModel.load(modelPath);// 加载存储的模型
+//
+//        List<Student> datas = new ArrayList<>();
+////        Dataset dataFrame = spark.createDataFrame(studentList, Student.class);
+////        and these lines to create a typed Dataset:
+//        Encoder encoder2 = Encoders.bean(Student.class);
+//        Dataset<Row> dataset2 = spark.createDataset(studentList, encoder);
+////            Dataset<Row> predictionDF = pipelineModel.transform(testData);      // 对用户数据进行预测
+//        Dataset<Row> predictionDF2 = pipelineModel.transform(dataset2);      // 对用户数据进行预测
+//        List<Row> result = predictionDF2.limit(1).collectAsList();
+//        Row row = result.get(0);
+//        double  label = (double)row.get(0);
+////            label large larger medimu small label1 prediction
+//        int  large = (int)row.get(1);
+//        int  larger = (int)row.get(2);
+//        int  medimu = (int)row.get(3);
+//        int  small = (int)row.get(4);
+//        double  prediction = (double)row.get(6);
+//        return success(
+//                "块度小: "+small+"\n"+
+//                        "块度中: "+medimu+"\n"+
+//                        "块度大: "+large+"\n"+
+//                        "块度超大: "+larger+"\n"+
+//                        "实际粒度是: "+label+"\n"+
+//                        "预测结果是: "+prediction);
+//    }
+//}

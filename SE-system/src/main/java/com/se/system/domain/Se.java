@@ -6,32 +6,50 @@ import lombok.Data;
 @Data
 public class Se extends BaseDomain {
     /** 参数主键 */
-
-
-
     @Excel(name = "参数主键", cellType = Excel.ColumnType.NUMERIC)
     private Integer id;
-//    @ExcelProperty("abs")
-//small	medimu	large	larger	label	label1	prediction
 
-    @ExcelProperty("small")
-    //平均块度
-    private Integer averageBlockSize;
-//    @ExcelProperty("by")
-    @ExcelProperty("medimu")
+    //块度
+    @ExcelProperty("kd")
+    private Double kd;
+
+    //密度
+    @ExcelProperty("md")
+    private Double md;
+
+    //强度
+    @ExcelProperty("qd")
+    private Double qd;
+
+    //泊松比
+    @ExcelProperty("bsb")
+    private Double bsb;
+
+
+    //弹性模量
+    @ExcelProperty("txml")
+    private Double txml;
+
     //大块率
-    private Integer boulderYield;
-//    @ExcelProperty("sc")
-    @ExcelProperty("large")
+    @ExcelProperty("dkl")
+    private Double dkl;
+
     //炸药单耗
-    private Integer specificCharge;
-//    @ExcelProperty("ot")
-    @ExcelProperty("larger")
-    //超挖厚度
-    private Integer overexcavationThickness;
-//    @ExcelProperty("Spe")
-    @ExcelProperty("prediction")
+    @ExcelProperty("zydh")
+    private Double zydh;
+
+    //孔径
+    @ExcelProperty("kjin")
+    private Double kjin;
+
+    //孔距
+    @ExcelProperty("kju")
+    private Double kju;
+
+    //炸药类型
+    @ExcelProperty("type")
     private Integer type;
+
 
     private String createBy;
     private String status;
@@ -40,25 +58,6 @@ public class Se extends BaseDomain {
     public Se(){
 
     }
-    public Se(Integer pl, Integer pw, Integer sl, Integer sw,Integer type) {
-        this.averageBlockSize = pl;
-        this.boulderYield = pw;
-        this.specificCharge = sl;
-        this.overexcavationThickness = sw;
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return "参数{" +
-                "平均块度='" + averageBlockSize + '\'' +
-                ", 大块率='" + boulderYield + '\'' +
-                ", 炸药单耗='" + specificCharge + '\'' +
-                ", 超挖厚度=" + overexcavationThickness + '\'' +
-                ", 类型是=" + type +
-                '}';
-    }
-
 }
 
 

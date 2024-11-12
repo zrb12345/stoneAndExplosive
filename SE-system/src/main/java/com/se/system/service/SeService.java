@@ -31,11 +31,12 @@ public interface SeService extends BaseService<Se>
 
     int save(List<Se> cachedDataList);
 
-    Se selectSeById(Long deptId);
+    int addSe(List<Se> cachedDataList);
+    Se selectSeById(Integer deptId);
 
     int updateSe(Se dept);
 
-    int deleteSeById(Long deptId);
+    int deleteSeById(Integer id);
     /**
      * 导入 数据
      *

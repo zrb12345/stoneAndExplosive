@@ -1,5 +1,6 @@
 package com.se.system.service.impl;
 
+import cn.hutool.core.date.DateTime;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.PageReadListener;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -14,8 +15,11 @@ import com.se.system.service.dto.SeQueryCriteria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Validator;
@@ -40,7 +44,8 @@ public class SeServiceImpl extends BaseServiceImpl<SeMapper, Se> implements SeSe
     private RedisCache redisCache;
     @Autowired
     protected Validator validator;
-
+    @Autowired
+    private PlatformTransactionManager transactionManager;
 
     /**
      * 查询参数配置列表
@@ -76,15 +81,17 @@ public class SeServiceImpl extends BaseServiceImpl<SeMapper, Se> implements SeSe
 
         return 0;
     }
-
+    @Override
+    public int addSe(List<Se> cachedDataList) {
+        return seMapper.insertList(cachedDataList);
+    }
     /**
-     * @param deptId
+     * @param id
      * @return
      */
     @Override
-    public Se selectSeById(Long deptId) {
-//        return seMapper.;
-        return new Se();
+    public Se selectSeById(Integer id) {
+        return seMapper.selectById(id);
     }
 
     /**
@@ -97,12 +104,12 @@ public class SeServiceImpl extends BaseServiceImpl<SeMapper, Se> implements SeSe
     }
 
     /**
-     * @param deptId
+     * @param id
      * @return
      */
     @Override
-    public int deleteSeById(Long deptId) {
-        return 0;
+    public int deleteSeById(Integer id) {
+        return seMapper.deleteById(id);
     }
 
     /**
@@ -118,11 +125,26 @@ public class SeServiceImpl extends BaseServiceImpl<SeMapper, Se> implements SeSe
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
         List<Se> list = EasyExcel.read(file.getInputStream()).head(Se.class).sheet().doReadSync();
+        for (int i = 0; i < list.size(); i++) {
+            Se item = list.get(i);
+            item.setCreateBy(operName);
+            item.setCreateTime(DateTime.now());
+        }
+        // 定义事务，并设置隔离级别
+        DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        definition.setPropagationBehavior(DefaultTransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManager.getTransaction(definition);
         try {
-        seMapper.insertList(list);
+            // 获取事务状态信息
+            QueryWrapper<Se> wrapper = new QueryWrapper<>();
+            wrapper.isNotNull("id");
+            seMapper.delete(wrapper);
+            seMapper.insertList(list);
             successMsg.append("数据导入成功");
+            transactionManager.commit(status);
         }catch (Exception e){
             failureMsg.append( "数据导入失败："+e.getMessage());
+            transactionManager.rollback(status);
         }
 //        for (int i = 0; i < list.size(); i++) {
 //            try {
@@ -139,12 +161,12 @@ public class SeServiceImpl extends BaseServiceImpl<SeMapper, Se> implements SeSe
 //        }
         if (failureNum > 0)
         {
-            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
+            failureMsg.insert(0, "很抱歉，导入失败！" );
             throw new ServiceException(failureMsg.toString());
         }
         else
         {
-            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + list.size() + " 条，数据如下：");
         }
         return successMsg.toString();
     }

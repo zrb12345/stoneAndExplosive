@@ -1,14 +1,21 @@
 package com.se;
 
-import org.apache.catalina.Pipeline;
+import org.apache.hadoop.shaded.org.apache.http.client.methods.HttpGet;
+import org.apache.hadoop.shaded.org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.hadoop.shaded.org.apache.http.impl.client.HttpClients;
+import org.apache.hadoop.shaded.org.apache.http.util.EntityUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.LocalDateTime;
 /**
  * 启动程序
  *
@@ -22,7 +29,31 @@ public class SEApplication
     public static void main(String[] args)
     {
         ConfigurableApplicationContext context = SpringApplication.run(SEApplication.class, args);
-
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        LocalDateTime beginTime = LocalDateTime.now();
+        HttpGet httpGet = new HttpGet("http://localhost:5000/python/RandomForestRegressor?" +
+                "md=195" +
+                "&qd=380" +
+                "&kd=219" +
+                "&dkl=104" +
+                "&bsb=390" +
+                "&txml=150" +
+                "&kjin=190" +
+                "&kju=230" +
+                "&zydh=300"
+        );
+        String response = null;
+        try {
+            response = EntityUtils.toString(httpClient.execute(httpGet).getEntity());
+            Long opetime = Duration.between(beginTime, LocalDateTime.now()).toMillis();
+            System.out.println(opetime);
+            System.out.println(response);
+            httpClient.close();
+            System.out.println("可以在服务器上跑一个python程序,然后调用这个python程序,不只是可以用java完成机器学习");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 //		System.out.print("Learned regression forest model:" + rfModel.toDebugString());
 
@@ -135,7 +166,6 @@ public class SEApplication
 ////
 ////        RandomForestRegressionModel rfModel = (RandomForestRegressionModel)(model.stages()[1]);
 ////        System.out.println("Learned regression forest model:\n" + rfModel.toDebugString());
-    }
 
 
 }

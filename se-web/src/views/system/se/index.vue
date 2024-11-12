@@ -2,23 +2,57 @@
   <div class="app-container">
     <el-row :gutter="20">
       <!--用户数据
-平均块度     average_block_size  averageBlockSize 平均块度
-大块率        boulder_yield   boulderYield 大块率
-炸药单耗     specific_charge specificCharge 炸药单耗
-超挖厚度     overexcavation_thickness overexcavationThickness 超挖厚度-->
+密度 md
+强度 qd
+平均块度 kd
+泊松比 bsb
+弹性模量 txml     
+大块率       dkl      
+炸药单耗     zydh 
+孔径  kjin
+孔距 kju
+-->
       <el-col :span="24" :xs="24">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
           label-width="68px">
-          <el-form-item label="平均块度" prop="averageBlockSize">
-            <el-input v-model="queryParams.averageBlockSize" placeholder="请输入平均块度" clearable style="width: 240px"
+          <el-form-item label="密度" prop="md">
+            <el-input v-model="queryParams.md" placeholder="请输入密度" clearable style="width: 240px"
               @keyup.enter.native="handleQuery" />
           </el-form-item>
-          <el-form-item label="大块率" prop="boulderYield">
-            <el-input v-model="queryParams.boulderYield" placeholder="请输入大块率" clearable style="width: 240px"
+          <el-form-item label="强度" prop="qd">
+            <el-input v-model="queryParams.qd" placeholder="请输入强度" clearable style="width: 240px"
+              @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="平均块度" prop="kd">
+            <el-input v-model="queryParams.kd" placeholder="请输入平均块度" clearable style="width: 240px"
+              @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="泊松比" prop="bsb">
+            <el-input v-model="queryParams.bsb" placeholder="请输入泊松比" clearable style="width: 240px"
+              @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="弹性模量" prop="txml">
+            <el-input v-model="queryParams.txml" placeholder="请输入弹性模量" clearable style="width: 240px"
+              @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="大块率" prop="dkl">
+            <el-input v-model="queryParams.dkl" placeholder="请输入大块率" clearable style="width: 240px"
+              @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="炸药单耗" prop="zydh">
+            <el-input v-model="queryParams.zydh" placeholder="请输入炸药单耗" clearable style="width: 240px"
+              @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="孔径" prop="kjin">
+            <el-input v-model="queryParams.kjin" placeholder="请输入孔径" clearable style="width: 240px"
+              @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="孔距" prop="kju">
+            <el-input v-model="queryParams.kju" placeholder="请输入孔距" clearable style="width: 240px"
               @keyup.enter.native="handleQuery" />
           </el-form-item>
           <el-form-item label="状态" prop="status">
-            <el-select v-model="queryParams.status" placeholder="花瓣状态" clearable style="width: 240px">
+            <el-select v-model="queryParams.status" placeholder="状态" clearable style="width: 240px">
               <el-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="dict.label"
                 :value="dict.value" />
             </el-select>
@@ -65,45 +99,53 @@
         <el-table v-loading="loading" :data="seList" @selection-change="handleSelectionChange"
           :default-sort="defaultSort" @sort-change="handleSortChange">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="花瓣编号" align="center" key="id" prop="id" v-if="columns[0].visible" />
-          <el-table-column label="平均块度" align="center" key="averageBlockSize" prop="averageBlockSize"
-            v-if="columns[1].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="炸药单耗" align="center" key="specificCharge" prop="specificCharge"
-            v-if="columns[2].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="大块率" align="center" key="boulderYield" prop="boulderYield" v-if="columns[3].visible"
-            width="120" />
-          <el-table-column label="超挖厚度" align="center" key="overexcavationThickness" prop="overexcavationThickness"
-            v-if="columns[4].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
+          <el-table-column label="编号" width="50" align="center" key="id" prop="id" v-if="columns[0].visible" />
+          <el-table-column label="密度" align="center" key="md" prop="md" v-if="columns[1].visible"
+            :show-overflow-tooltip="true" />
+          <el-table-column label="强度" align="center" key="qd" prop="qd" v-if="columns[2].visible"
+            :show-overflow-tooltip="true" />
+          <el-table-column label="块度" align="center" key="kd" prop="kd" v-if="columns[3].visible" />
+          <el-table-column label="泊松比" align="center" key="bsb" prop="bsb" v-if="columns[4].visible" />
+          <el-table-column label="弹性模量" align="center" key="txml" prop="txml" v-if="columns[5].visible" />
+          <el-table-column label="大块率" align="center" key="dkl" prop="dkl" v-if="columns[6].visible" />
+          <el-table-column label="炸药单耗" align="center" key="zydh" prop="zydh" v-if="columns[7].visible" />
+          <el-table-column label="孔径" align="center" key="kjin" prop="kjin" v-if="columns[8].visible" />
+          <el-table-column label="孔距" align="center" key="kju" prop="kju" v-if="columns[9].visible" />
+          <el-table-column label="状态" align="center" key="status" v-if="columns[10].visible">
             <template slot-scope="scope">
               <el-switch v-model="scope.row.status" active-value="0" inactive-value="1"
                 @change="handleStatusChange(scope.row)"></el-switch>
             </template>
           </el-table-column>
-          <el-table-column prop="type" label="类型" sortable="custom" :sort-orders="['descending', 'ascending']"
-            align="center" key="type" v-if="columns[6].visible">
+          <!-- <el-table-column prop="type" label="类型" sortable="custom" :sort-orders="['descending', 'ascending']"
+            align="center" key="type" v-if="columns[11].visible">
             <template slot-scope="scope">{{ getLabel(getType, scope.row.type, 'dictValue', 'dictLabel') }}</template>
-          </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+          </el-table-column> -->
+          <!-- <el-table-column label="创建时间" align="center" prop="createTime" width="160">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width">
-            <template slot-scope="scope" v-if="scope.row.id !== 1">
-              <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:se:edit']">修改</el-button>
-              <el-button size="mini" type="text" icon="el-icon-edit" @click="onlyForecastFun(scope.row)"
-                v-hasPermi="['system:se:edit']"> 预测</el-button>
-              <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-                v-hasPermi="['system:se:remove']">删除</el-button>
-              <!-- <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:se:resetPwd', 'system:se:edit']">
-                <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
-                    v-hasPermi="['system:se:edit']">分配角色</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown> -->
+            <template slot-scope="scope" v-if="scope.row.id !== 0">
+              <div>
+                <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)"
+                  v-hasPermi="['system:se:resetPwd', 'system:se:edit']">
+                  <el-button size="medium" type="danger" icon="el-icon-d-arrow-right">预测</el-button>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="A" icon="el-icon-circle-check">大块率</el-dropdown-item>
+                    <el-dropdown-item command="B" icon="el-icon-circle-check">块度</el-dropdown-item>
+                    <el-dropdown-item command="C" icon="el-icon-circle-check">炸药类型</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
+              <div>
+                <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
+                  v-hasPermi="['system:se:edit']">修改</el-button>
+                <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
+                  v-hasPermi="['system:se:remove']">删除</el-button>
+              </div>
+
             </template>
           </el-table-column>
         </el-table>
@@ -118,31 +160,67 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="炸药单耗" prop="specificCharge">
-              <el-input v-model="form.specificCharge" placeholder="请输入炸药单耗" maxlength="30" />
+            <el-form-item label="密度" prop="md">
+              <el-input v-model="form.md" placeholder="请输入密度" maxlength="30" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="超挖厚度" prop="overexcavationThickness">
-              <el-input v-model="form.overexcavationThickness" placeholder="请输入超挖厚度" maxlength="30" />
-              <!-- <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门/超挖厚度" /> -->
+            <el-form-item label="块度" prop="kd">
+              <el-input v-model="form.kd" placeholder="请输入块度" maxlength="30" />
+            </el-form-item>
+          </el-col>
+
+
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="强度" prop="qd">
+              <el-input v-model="form.qd" placeholder="请输入强度" maxlength="30" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="泊松比" prop="dkl">
+              <el-input v-model="form.bsb" placeholder="请输入泊松比" maxlength="11" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="大块率" prop="boulderYield">
-              <el-input v-model="form.boulderYield" placeholder="请输入大块率" maxlength="11" />
+            <el-form-item label="弹性模量" prop="txml">
+              <el-input v-model="form.txml" placeholder="请输入弹性模量" maxlength="30" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="大块率" prop="dkl">
+              <el-input v-model="form.dkl" placeholder="请输入大块率" maxlength="30" />
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="炸药单耗" prop="zydh">
+              <el-input v-model="form.zydh" placeholder="请输入炸药单耗" maxlength="30" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="孔径" prop="kjin">
+              <el-input v-model="form.kjin" placeholder="请输入孔径" maxlength="30" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item v-if="form.id == undefined" label="平均块度" prop="averageBlockSize">
-              <el-input v-model="form.averageBlockSize" placeholder="请输入平均块度" maxlength="30" />
+            <el-form-item label="孔距" prop="kju">
+              <el-input v-model="form.kju" placeholder="请输入孔距" maxlength="30" />
             </el-form-item>
           </el-col>
+          <!-- <el-col :span="12">
+            <el-select v-model="form.type" placeholder="请选择炸药类型" clearable>
+              <el-option v-for="dict in dict.type.extype" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select> </el-col> -->
         </el-row>
+
         <el-row>
           <el-col :span="12">
             <el-form-item label="状态">
@@ -153,9 +231,6 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-        </el-row>
-
-        <el-row>
           <el-col :span="24">
             <el-form-item label="备注">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
@@ -195,13 +270,14 @@
 </template>
 
 <script>
-import { listSe, trainAndForecast, onlyForecast, addse, getSe, delSe, updateSe, resetSePwd, changeSeStatus, deptTreeSelect } from "@/api/system/se";
+import { getConsumeOfTop5 } from "@/api/system/exStone";
+import { listSe, trainAndForecast, onlyForecast1, onlyForecast2, onlyForecast3, onlyForecast4, onlyForecast5, addse, getSe, delSe, updateSe, resetSePwd, changeSeStatus, deptTreeSelect } from "@/api/system/se";
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
   name: "Se",
-  dicts: ['sys_normal_disable'],//, 'sys_se_sex'
+  dicts: ['sys_normal_disable', 'extype'],//, 'sys_se_sex'
   components: { Treeselect },
   data() {
     return {
@@ -259,20 +335,25 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        averageBlockSize: undefined,
-        boulderYield: undefined,
+        kd: undefined,
+        dkl: undefined,
         status: undefined,
         deptId: undefined
       },
       // 列信息
       columns: [
-        { key: 0, label: `花瓣编号`, visible: true },
-        { key: 1, label: `平均块度`, visible: true },
-        { key: 2, label: `炸药单耗`, visible: true },
-        { key: 3, label: `超挖厚度`, visible: true },
+        { key: 0, label: `编号`, visible: true },
+        { key: 1, label: `密度`, visible: true },
+        { key: 2, label: `强度`, visible: true },
+        { key: 3, label: `平均块度`, visible: true },
         { key: 4, label: `大块率`, visible: true },
-        { key: 5, label: `状态`, visible: true },
-        { key: 6, label: `创建时间`, visible: true }
+        { key: 5, label: `泊松比`, visible: true },
+        { key: 6, label: `弹性模量`, visible: true },
+        { key: 7, label: `炸药单耗`, visible: true },
+        { key: 8, label: `孔径`, visible: true },
+        { key: 9, label: `孔距`, visible: true },
+        { key: 10, label: `状态`, visible: true },
+        { key: 11, label: `创建时间`, visible: true }
       ],
       // 表单校验
       rules: {
@@ -335,10 +416,10 @@ export default {
       this.queryParams.deptId = data.id;
       this.handleQuery();
     },
-    // 花瓣状态修改
+    // 状态修改
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
-      this.$modal.confirm('确认要"' + text + '""' + row.averageBlockSize + '"数据吗？').then(function () {
+      this.$modal.confirm('确认要"' + text + '""' + row.kd + '"数据吗？').then(function () {
         return changeSeStatus(row.id, row.status);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
@@ -356,10 +437,10 @@ export default {
       this.form = {
         id: undefined,
         deptId: undefined,
-        averageBlockSize: undefined,
-        specificCharge: undefined,
+        kd: undefined,
+        zydh: undefined,
         password: undefined,
-        boulderYield: undefined,
+        dkl: undefined,
         email: undefined,
         sex: undefined,
         status: "0",
@@ -391,8 +472,14 @@ export default {
     // 更多操作触发
     handleCommand(command, row) {
       switch (command) {
-        case "handleAuthRole":
-          this.handleAuthRole(row);
+        case "A":
+          this.onlyForecastFun1(row);
+          break;
+        case "B":
+          this.onlyForecastFun2(row);
+          break;
+        case "C":
+          this.onlyForecastFun3(row);
           break;
         default:
           break;
@@ -400,14 +487,11 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      getSe().then(response => {
-        this.postOptions = response.posts;
-        this.roleOptions = response.roles;
-        this.open = true;
-        this.title = "添加数据";
-        this.form.password = this.initPassword;
-      });
+      // this.postOptions = response.posts;
+      // this.roleOptions = response.roles;
+      this.open = true;
+      this.title = "添加数据";
+      // this.form.password = this.initPassword;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -415,10 +499,10 @@ export default {
       const id = row.id || this.ids;
       getSe(id).then(response => {
         this.form = response.data;
-        this.postOptions = response.posts;
-        this.roleOptions = response.roles;
-        this.$set(this.form, "postIds", response.postIds);
-        this.$set(this.form, "roleIds", response.roleIds);
+        // this.postOptions = response.posts;
+        // this.roleOptions = response.roles;
+        // this.$set(this.form, "postIds", response.postIds);
+        // this.$set(this.form, "roleIds", response.roleIds);
         this.open = true;
         this.title = "修改数据";
         this.form.password = "";
@@ -452,8 +536,38 @@ export default {
         }
       });
     },
-    onlyForecastFun(row) {
-      onlyForecast(row).then(response => {
+    onlyForecastFun1(row) {
+      onlyForecast1(row).then(response => {
+        window.alert(response.msg);
+      }
+      );
+    },
+    onlyForecastFun2(row) {
+      onlyForecast2(row).then(response => {
+        window.alert(response.msg);
+      }
+      );
+    },
+    getConsumeOfTop5Asend(params) {
+      getConsumeOfTop5(params).then(response2 => {
+        window.alert(response2.msg);
+      })
+    },
+    onlyForecastFun3(row) {
+      onlyForecast3(row).then(response => {
+        let params = response.data
+        params.push(row.type)
+        this.getConsumeOfTop5Asend(params)
+      })
+    },
+    onlyForecastFun4(row) {
+      onlyForecast4(row).then(response => {
+        window.alert(response.msg);
+      }
+      );
+    },
+    onlyForecastFun5(row) {
+      onlyForecast5(row).then(response => {
         window.alert(response.msg);
       }
       );
@@ -461,7 +575,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除用户编号/花瓣编号为"' + ids + '"的数据项？').then(function () {
+      this.$modal.confirm('是否确认删除编号为"' + ids + '"的数据项？').then(function () {
         return delSe(ids);
       }).then(() => {
         this.getList();

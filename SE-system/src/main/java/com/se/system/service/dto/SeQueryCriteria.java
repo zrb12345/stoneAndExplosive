@@ -15,37 +15,31 @@ public class SeQueryCriteria {
     // 模糊
     @Query(type = Query.Type.UNIX_TIMESTAMP)
     private List<String> createTime;
-
-    // 模糊
     @Query
-    private Integer id;
-
-    // 模糊
+    private Double id;
     @Query
-    private Integer averageBlockSize;
-
-    // 模糊
+    private Double md;
     @Query
-    private Integer boulderYield;
-
+    private Double qd;
     @Query
-    private Integer specificCharge;
-
+    private Double kd;
     @Query
-    private Integer overexcavationThickness;
-
-
-
-
+    private Double txml;
     @Query
-    private Integer state;
-
+    private Double bsb;
+    @Query
+    private Double kjin;
+    @Query
+    private Double kju;
+    @Query
+    private Double zydh;
+    @Query
+    private Double dkl;
+    @Query
+    private Integer type;
+    @Query
+    private Integer status;
     @Query
     private Integer isDel;
-
-    @Query(propName="combinationId",type = Query.Type.NOT_EQUAL)
-    private Integer newCombinationId;
-
-
 
 }

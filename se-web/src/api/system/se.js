@@ -34,16 +34,50 @@ export function trainAndForecast(data) {
     data: data
   })
 }
-//  模型 预测
-export function onlyForecast(data) {
+//  模型 预测 大块率
+export function onlyForecast1(data) {
   return request({
-    url: '/system/se/onlyForecast',
+    url: '/system/se/onlyForecastDkl',
     method: 'post',
     data: data
   })
 }
 
+//  模型 预测 块度
+export function onlyForecast2(data) {
+  return request({
+    url: '/system/se/onlyForecastKd',
+    method: 'post',
+    data: data
+  })
+}
 
+//  模型 预测 类型
+export function onlyForecast3(data) {
+  return request({
+    url: '/system/se/usePython',
+    method: 'post',
+    data: data
+  })
+}
+
+//  模型 预测 超大
+export function onlyForecast4(data) {
+  return request({
+    url: '/system/se/onlyForecastLarger',
+    method: 'post',
+    data: data
+  })
+}
+
+//  模型 预测 平均粒度
+export function onlyForecast5(data) {
+  return request({
+    url: '/system/se/onlyForecastLabel',
+    method: 'post',
+    data: data
+  })
+}
 // 修改用户
 export function updateSe(data) {
   return request({

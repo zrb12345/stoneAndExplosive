@@ -2,6 +2,7 @@ package com.se.system.mapper;
 
 import com.se.common.mapper.CoreMapper;
 import com.se.system.domain.Se;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface SeMapper extends CoreMapper<Se>
     public List<Se> selectSeList(Se Se);
 
     void insertSe(Se Se);
+    @Delete("delete from se")
+    void deleteAll();
 }
