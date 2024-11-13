@@ -131,12 +131,13 @@
               <div>
                 <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)"
                   v-hasPermi="['system:se:resetPwd', 'system:se:edit']">
-                  <el-button size="medium" type="danger" icon="el-icon-d-arrow-right">预测</el-button>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="A" icon="el-icon-circle-check">大块率</el-dropdown-item>
-                    <el-dropdown-item command="B" icon="el-icon-circle-check">块度</el-dropdown-item>
-                    <el-dropdown-item command="C" icon="el-icon-circle-check">炸药类型</el-dropdown-item>
-                  </el-dropdown-menu>
+                  <el-button size="medium" @click="forecat(scope.row)" type="danger"
+                    icon="el-icon-d-arrow-right">预测</el-button>
+                  <!-- <el-dropdown-menu slot="dropdown"> -->
+                  <!-- <el-dropdown-item command="A" icon="el-icon-circle-check">大块率</el-dropdown-item> -->
+                  <!-- <el-dropdown-item command="B" icon="el-icon-circle-check">块度</el-dropdown-item> -->
+                  <!-- <el-dropdown-item command="C" icon="el-icon-circle-check">炸药类型</el-dropdown-item> -->
+                  <!-- </el-dropdown-menu> -->
                 </el-dropdown>
               </div>
               <div>
@@ -484,6 +485,9 @@ export default {
         default:
           break;
       }
+    },
+    forecat(row) {
+      this.onlyForecastFun3(row);
     },
     /** 新增按钮操作 */
     handleAdd() {
